@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -125,6 +126,12 @@ class Snake {
         // Start with a single snake segment
         segmentLocations.add(new Point(w / 2, h / 2));
     }
+
+
+
+
+
+
 
 
     void move() {
