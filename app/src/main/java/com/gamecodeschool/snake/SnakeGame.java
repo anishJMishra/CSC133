@@ -11,7 +11,6 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -208,18 +207,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Fill the screen with a color
             drawable.background(mCanvas);
-            //mCanvas.drawColor(Color.argb(255, 26, 128, 182));
 
             // Set the size and color of the mPaint for the text
             drawable.drawScore(mCanvas,mScore);
-            /*
-            mPaint.setColor(Color.argb(255, 255, 255, 255));
-            mPaint.setTextSize(120);
-
-            // Draw the score
-            mCanvas.drawText("" + mScore, 20, 120, mPaint);
-
-             */
 
             // Draw the apple and the snake
             mApple.draw(mCanvas, mPaint);
@@ -227,7 +217,6 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Draw some text while paused
             drawable.textOutput(mCanvas,getResources().getString(R.string.tap_to_play),mPaused);
-
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
