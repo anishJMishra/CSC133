@@ -268,7 +268,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                   newGame();
 
                   // Don't want to process snake direction for this tap
-                   return true;
+                  return true;
                }
         if (!mPaused) {
             switch (keyCode) {
