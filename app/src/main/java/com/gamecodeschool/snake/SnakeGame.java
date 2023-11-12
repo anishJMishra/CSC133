@@ -11,6 +11,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -47,7 +48,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Snake mSnake;
     // And an apple
     private Apple mApple;
-
+    private int mSnakeDirection;
 
     // This is the constructor method that gets called
     // from SnakeActivity
@@ -102,7 +103,9 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-
+        mSnakeDirection = Snake.RIGHT;
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
 
@@ -235,26 +238,57 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
     }
 
+    // @Override
+//    public boolean onTouchEvent(MotionEvent motionEvent) {
+//        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+//            case MotionEvent.ACTION_UP:
+//                if (mPaused) {
+//                    mPaused = false;
+//                    newGame();
+//
+//                    // Don't want to process snake direction for this tap
+//                    return true;
+//                }
+//
+//                // Let the Snake class handle the input
+//                mSnake.switchHeading(motionEvent);
+//                break;
+//
+//            default:
+//                break;
+//
+//        }
+//        return true;
+//    }
+
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_UP:
-                if (mPaused) {
-                    mPaused = false;
-                    newGame();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mPaused) {
+            mPaused = false;
+            newGame();
 
-                    // Don't want to process snake direction for this tap
-                    return true;
-                }
-
-                // Let the Snake class handle the input
-                mSnake.switchHeading(motionEvent);
-                break;
-
-            default:
-                break;
-
+            // Don't want to process snake direction for this tap
+            return true;
         }
+        if (!mPaused) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_W:
+                    if (mSnakeDirection!=Snake.DOWN){
+                        mSnake.setSnakeDirection(Snake.UP);
+                    }
+                    break;
+                case KeyEvent.KEYCODE_D:
+                    mSnake.setSnakeDirection(Snake.RIGHT);
+                    break;
+                case KeyEvent.KEYCODE_S:
+                    mSnake.setSnakeDirection(Snake.DOWN);
+                    break;
+                case KeyEvent.KEYCODE_A:
+                    mSnake.setSnakeDirection(Snake.LEFT);
+                    break;
+            }
+        }
+
         return true;
     }
 
