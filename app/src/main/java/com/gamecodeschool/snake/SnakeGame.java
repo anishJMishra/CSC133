@@ -4,23 +4,26 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+
 import java.io.IOException;
 
 class SnakeGame extends SurfaceView implements Runnable{
 
     // Objects for the game loop/thread
     private Thread mThread = null;
-    private Draw drawable;
+    private DrawCanvas drawable;
     // Control pausing between updates
     private long mNextFrameTime;
     // Is the game currently playing and or paused?
@@ -54,11 +57,11 @@ class SnakeGame extends SurfaceView implements Runnable{
     // from SnakeActivity
     public SnakeGame(Context context, Point size) {
         super(context);
-
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
         // How many blocks of the same size will fit into the height
         mNumBlocksHigh = size.y / blockSize;
+
 
 
 
@@ -107,7 +110,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 blockSize);
 
         //drawable object
-        drawable = new Draw(mPaint, mSurfaceHolder);
+        drawable = new DrawCanvas(mPaint, mSurfaceHolder);
     }
 
 
@@ -132,8 +135,10 @@ class SnakeGame extends SurfaceView implements Runnable{
     @Override
     public void run() {
         while (mPlaying) {
+
             if(!mPaused) {
                 // Update 10 times a second
+
                 if (updateRequired()) {
                     update();
                 }
@@ -142,8 +147,10 @@ class SnakeGame extends SurfaceView implements Runnable{
             draw();
         }
     }
+    public void updateMovement(Snake.Heading newHeading){
+        mSnake.updateMovement(newHeading);
 
-
+    }
     // Check to see if it is time for an update
     public boolean updateRequired() {
 
@@ -223,6 +230,9 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
     }
 
+
+
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -236,6 +246,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 }
 
                 // Let the Snake class handle the input
+
 
                 mSnake.switchHeading(motionEvent);
                 break;

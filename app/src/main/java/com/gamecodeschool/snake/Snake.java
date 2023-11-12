@@ -7,9 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.EditText;
 
+import java.security.Key;
 import java.util.ArrayList;
 
 class Snake {
@@ -28,12 +32,14 @@ class Snake {
     private int halfWayPoint;
 
     // For tracking movement Heading
-    private enum Heading {
+    enum Heading {
         UP, RIGHT, DOWN, LEFT
     }
 
     // Start by heading to the right
     private Heading heading = Heading.RIGHT;
+
+    private EditText editText;
 
     // A bitmap for each direction the head can face
     private Bitmap mBitmapHeadRight;
@@ -43,6 +49,12 @@ class Snake {
 
     // A bitmap for the body
     private Bitmap mBitmapBody;
+
+    View view;
+
+
+    private int action;
+
 
 
     Snake(Context context, Point mr, int ss) {
@@ -126,9 +138,6 @@ class Snake {
         // Start with a single snake segment
         segmentLocations.add(new Point(w / 2, h / 2));
     }
-
-
-
 
 
 
@@ -262,8 +271,10 @@ class Snake {
             }
         }
     }
+    public void updateMovement(Snake.Heading newHeading){
+        heading = newHeading;
 
-
+    }
     // Handle changing direction
     void switchHeading(MotionEvent motionEvent) {
 
@@ -303,4 +314,5 @@ class Snake {
             }
         }
     }
+
 }
