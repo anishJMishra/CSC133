@@ -273,18 +273,20 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (!mPaused) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_W:
-                    if (mSnakeDirection!=Snake.DOWN){
-                        mSnake.setSnakeDirection(Snake.UP);
-                    }
+                    if(mSnake.getHeading()!=Snake.Heading.DOWN)
+                        mSnake.setSnakeDirection(Snake.Heading.UP);
                     break;
                 case KeyEvent.KEYCODE_D:
-                    mSnake.setSnakeDirection(Snake.RIGHT);
+                    if(mSnake.getHeading()!=Snake.Heading.LEFT)
+                        mSnake.setSnakeDirection(Snake.Heading.RIGHT);
                     break;
                 case KeyEvent.KEYCODE_S:
-                    mSnake.setSnakeDirection(Snake.DOWN);
+                    if(mSnake.getHeading()!=Snake.Heading.UP)
+                        mSnake.setSnakeDirection(Snake.Heading.DOWN);
                     break;
                 case KeyEvent.KEYCODE_A:
-                    mSnake.setSnakeDirection(Snake.LEFT);
+                    if(mSnake.getHeading()!=Snake.Heading.RIGHT)
+                        mSnake.setSnakeDirection(Snake.Heading.LEFT);
                     break;
             }
         }

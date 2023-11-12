@@ -27,7 +27,7 @@ class Snake {
     private int halfWayPoint;
 
     // For tracking movement Heading
-    private enum Heading {
+    public enum Heading {
         UP, RIGHT, DOWN, LEFT
     }
 
@@ -42,7 +42,6 @@ class Snake {
 
     // A bitmap for the body
     private Bitmap mBitmapBody;
-    private int mSnakeDirection;
     public static final int UP = 1;
     public static final int RIGHT = 2;
     public static final int DOWN = 3;
@@ -115,7 +114,6 @@ class Snake {
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
-        mSnakeDirection = RIGHT;
 
     }
 
@@ -150,7 +148,7 @@ class Snake {
         Point p = segmentLocations.get(0);
 
         // Move it appropriately
-        switch (mSnakeDirection) {
+        switch (heading) {
             case UP:
                 p.y--;
                 break;
@@ -215,25 +213,37 @@ class Snake {
         // Don't run this code if ArrayList has nothing in it
         if (!segmentLocations.isEmpty()) {
             // Draw the head
-            switch (mSnakeDirection) {
-                case UP:
-                    canvas.drawBitmap(mBitmapHeadRight, segmentLocations.get(0).x * mSegmentSize,
-                            segmentLocations.get(0).y * mSegmentSize, paint);
-                    break;
-
+            switch (heading) {
                 case RIGHT:
-                    canvas.drawBitmap(mBitmapHeadLeft, segmentLocations.get(0).x * mSegmentSize,
-                            segmentLocations.get(0).y * mSegmentSize, paint);
-                    break;
-
-                case DOWN:
-                    canvas.drawBitmap(mBitmapHeadUp, segmentLocations.get(0).x * mSegmentSize,
-                            segmentLocations.get(0).y * mSegmentSize, paint);
+                    canvas.drawBitmap(mBitmapHeadRight,
+                            segmentLocations.get(0).x
+                                    * mSegmentSize,
+                            segmentLocations.get(0).y
+                                    * mSegmentSize, paint);
                     break;
 
                 case LEFT:
-                    canvas.drawBitmap(mBitmapHeadDown, segmentLocations.get(0).x * mSegmentSize,
-                            segmentLocations.get(0).y * mSegmentSize, paint);
+                    canvas.drawBitmap(mBitmapHeadLeft,
+                            segmentLocations.get(0).x
+                                    * mSegmentSize,
+                            segmentLocations.get(0).y
+                                    * mSegmentSize, paint);
+                    break;
+
+                case UP:
+                    canvas.drawBitmap(mBitmapHeadUp,
+                            segmentLocations.get(0).x
+                                    * mSegmentSize,
+                            segmentLocations.get(0).y
+                                    * mSegmentSize, paint);
+                    break;
+
+                case DOWN:
+                    canvas.drawBitmap(mBitmapHeadDown,
+                            segmentLocations.get(0).x
+                                    * mSegmentSize,
+                            segmentLocations.get(0).y
+                                    * mSegmentSize, paint);
                     break;
             }
 
@@ -244,8 +254,11 @@ class Snake {
             }
         }
     }
-    void setSnakeDirection(int direction) {
-        mSnakeDirection = direction;
+    public Snake.Heading getHeading(){
+        return heading;
+    }
+    void setSnakeDirection(Snake.Heading direction) {
+        heading = direction;
     }
 
     // Handle changing direction
