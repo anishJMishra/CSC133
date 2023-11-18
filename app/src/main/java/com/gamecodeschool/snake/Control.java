@@ -13,15 +13,23 @@ public class Control{
             case KeyEvent.KEYCODE_W:
                 if(mSnake.getHeading()!=Snake.Heading.DOWN)
                     return Snake.Heading.UP;
+                else
+                    return heading;
             case KeyEvent.KEYCODE_D:
                 if(mSnake.getHeading()!=Snake.Heading.LEFT)
                     return Snake.Heading.RIGHT;
+                else
+                    return heading;
             case KeyEvent.KEYCODE_S:
                 if(mSnake.getHeading()!=Snake.Heading.UP)
                     return Snake.Heading.DOWN;
+                else
+                    return heading;
             case KeyEvent.KEYCODE_A:
                 if(mSnake.getHeading()!=Snake.Heading.RIGHT)
                     return Snake.Heading.LEFT;
+                else
+                    return heading;
         }
         return heading;
     }

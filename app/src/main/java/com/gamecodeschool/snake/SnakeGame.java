@@ -269,9 +269,10 @@ class SnakeGame extends SurfaceView implements Runnable{
             newGame();
             return true;
         }
-        Snake.Heading heading = control.keyUpdater(mSnake, mSnake.getHeading(), keyCode);
-        mSnake.setSnakeDirection(heading);
+        if(!mPaused) {
 
+            mSnake.setSnakeDirection(control.keyUpdater(mSnake, mSnake.getHeading(), keyCode));
+        }
 
         return true;
     }
