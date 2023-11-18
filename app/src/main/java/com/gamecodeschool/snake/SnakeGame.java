@@ -48,18 +48,18 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Snake mSnake;
     // And an apple
     private Apple mApple;
+    public Control control;
     private int mSnakeDirection;
 
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size) {
         super(context);
-
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
         // How many blocks of the same size will fit into the height
         mNumBlocksHigh = size.y / blockSize;
-
+        control = new Control();
         // Initialize the SoundPool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -103,9 +103,9 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-        mSnakeDirection = Snake.RIGHT;
         setFocusable(true);
         setFocusableInTouchMode(true);
+
     }
 
 
@@ -129,14 +129,15 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Handles the game loop
     @Override
     public void run() {
+
         while (mPlaying) {
+
             if(!mPaused) {
                 // Update 10 times a second
                 if (updateRequired()) {
                     update();
                 }
             }
-
             draw();
         }
     }
@@ -238,58 +239,39 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
     }
 
-    // @Override
-//    public boolean onTouchEvent(MotionEvent motionEvent) {
-//        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-//            case MotionEvent.ACTION_UP:
-//                if (mPaused) {
-//                    mPaused = false;
-//                    newGame();
-//
-//                    // Don't want to process snake direction for this tap
-//                    return true;
-//                }
-//
-//                // Let the Snake class handle the input
-//                mSnake.switchHeading(motionEvent);
-//                break;
-//
-//            default:
-//                break;
-//
-//        }
-//        return true;
-//    }
+    @Override
+     public boolean onTouchEvent(MotionEvent motionEvent) {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_UP:
+                if (mPaused) {
+                    mPaused = false;
+                    newGame();
+
+                    // Don't want to process snake direction for this tap
+                    return true;
+                }
+
+                // Let the Snake class handle the input
+                mSnake.setSnakeDirection(control.touchUpdater(mSnake.getHeading(), motionEvent, mSnake.getHalfWayPoint()));
+                break;
+
+            default:
+                break;
+
+        }
+        return true;
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mPaused) {
+        if(mPaused){
             mPaused = false;
             newGame();
-
-            // Don't want to process snake direction for this tap
             return true;
         }
-        if (!mPaused) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_W:
-                    if(mSnake.getHeading()!=Snake.Heading.DOWN)
-                        mSnake.setSnakeDirection(Snake.Heading.UP);
-                    break;
-                case KeyEvent.KEYCODE_D:
-                    if(mSnake.getHeading()!=Snake.Heading.LEFT)
-                        mSnake.setSnakeDirection(Snake.Heading.RIGHT);
-                    break;
-                case KeyEvent.KEYCODE_S:
-                    if(mSnake.getHeading()!=Snake.Heading.UP)
-                        mSnake.setSnakeDirection(Snake.Heading.DOWN);
-                    break;
-                case KeyEvent.KEYCODE_A:
-                    if(mSnake.getHeading()!=Snake.Heading.RIGHT)
-                        mSnake.setSnakeDirection(Snake.Heading.LEFT);
-                    break;
-            }
-        }
+        Snake.Heading heading = control.keyUpdater(mSnake, mSnake.getHeading(), keyCode);
+        mSnake.setSnakeDirection(heading);
+
 
         return true;
     }

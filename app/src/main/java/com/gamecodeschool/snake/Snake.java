@@ -260,6 +260,9 @@ class Snake {
     void setSnakeDirection(Snake.Heading direction) {
         heading = direction;
     }
+    public int getHalfWayPoint(){
+        return halfWayPoint;
+    }
 
     // Handle changing direction
 //    void switchHeading(MotionEvent motionEvent) {
@@ -300,4 +303,5 @@ class Snake {
 //            }
 //        }
 //    }
+
 }
