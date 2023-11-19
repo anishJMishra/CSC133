@@ -22,6 +22,7 @@ class Snake {
     // How big is the entire grid
     private Point mMoveRange;
 
+
     // Where is the centre of the screen
     // horizontally in pixels?
     private int halfWayPoint;
@@ -168,6 +169,7 @@ class Snake {
 
     }
 
+
     boolean detectDeath() {
         // Has the snake died?
         boolean dead = false;
@@ -263,7 +265,9 @@ class Snake {
     public int getHalfWayPoint(){
         return halfWayPoint;
     }
-
+    public int getSnakeLength(){
+        return segmentLocations.size();
+    }
     // Handle changing direction
 //    void switchHeading(MotionEvent motionEvent) {
 //

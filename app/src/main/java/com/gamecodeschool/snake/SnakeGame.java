@@ -32,8 +32,12 @@ class SnakeGame extends SurfaceView implements Runnable{
     private int mEat_ID = -1;
     private int mCrashID = -1;
 
+
+
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
+
+    private int color;
     private int mNumBlocksHigh;
 
     // How many points does the player have
@@ -44,11 +48,15 @@ class SnakeGame extends SurfaceView implements Runnable{
     private SurfaceHolder mSurfaceHolder;
     private Paint mPaint;
 
+    private Level level;
+
     // A snake ssss
     private Snake mSnake;
     // And an apple
     private Apple mApple;
-    public Control control;
+    private Control control;
+
+    private int speed;
     private int mSnakeDirection;
 
     // This is the constructor method that gets called
@@ -57,9 +65,14 @@ class SnakeGame extends SurfaceView implements Runnable{
         super(context);
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
+
+        speed = 0;
+
         // How many blocks of the same size will fit into the height
         mNumBlocksHigh = size.y / blockSize;
         control = new Control();
+
+        color = Color.argb(255, 26, 128, 182);
         // Initialize the SoundPool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -103,6 +116,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
+        level = new Level(mSnake.getSnakeLength());
         setFocusable(true);
         setFocusableInTouchMode(true);
 
@@ -147,7 +161,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     public boolean updateRequired() {
 
         // Run at 10 frames per second
-        final long TARGET_FPS = 10;
+        long TARGET_FPS = 10+speed;
         // There are 1000 milliseconds in a second
         final long MILLIS_PER_SECOND = 1000;
 
@@ -167,7 +181,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         return false;
     }
 
-
     // Update all the game objects
     public void update() {
 
@@ -183,6 +196,16 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Add to  mScore
             mScore = mScore + 1;
 
+
+            //Game's speed, changes based on the level
+            if(mSnake.getSnakeLength()-level.getOldSnakeLength()>=5) {
+                speed = level.updateSpeed(mSnake.getSnakeLength());
+                level.updateSnakeLength(mSnake.getSnakeLength());
+            }
+
+
+
+
             // Play a sound
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
@@ -191,7 +214,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (mSnake.detectDeath()) {
             // Pause the game ready to start again
             mSP.play(mCrashID, 1, 1, 0, 0, 1);
-
+            speed = 0;
+            level.isDead();
             mPaused =true;
         }
 
@@ -205,14 +229,15 @@ class SnakeGame extends SurfaceView implements Runnable{
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+            mCanvas.drawColor(level.updateBGColor());
 
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
             mPaint.setTextSize(120);
 
             // Draw the score
-            mCanvas.drawText("" + mScore, 20, 120, mPaint);
+            mCanvas.drawText("" + mScore+ " " +mSnake.getSnakeLength() + " " + speed , 20, 120, mPaint);
+
 
             // Draw the apple and the snake
             mApple.draw(mCanvas, mPaint);
@@ -238,6 +263,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
     }
+
 
     @Override
      public boolean onTouchEvent(MotionEvent motionEvent) {
