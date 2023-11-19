@@ -116,7 +116,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-        level = new Level(mSnake.getSnakeLength());
+        level = new Level();
         setFocusable(true);
         setFocusableInTouchMode(true);
 
@@ -199,13 +199,21 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             //Game's speed, changes based on the level
             if(mSnake.getSnakeLength()-level.getOldSnakeLength()>=5) {
-                if(level.getLevel()<3){
+
+                if(level.getLevel()<3) {
                     speed = level.updateSpeed(mSnake.getSnakeLength());
                     level.updateLevel();
-
+                    level.updateSnakeLength(mSnake.getSnakeLength());
+                }
+                else if(level.getLevel()<6){
+                    level.updateLevel();
                 }
 
-                level.updateSnakeLength(mSnake.getSnakeLength());
+
+
+
+
+
 
             }
 

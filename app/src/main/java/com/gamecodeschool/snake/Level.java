@@ -9,7 +9,7 @@ public class Level {
     private int snakeLength;
     private int levelCounter;
 
-    //Total of 4 levels with their own movement speed
+    //Total of 6 levels with their own movement speed
     HashMap<Integer, Integer> levelSpeed = new HashMap<Integer, Integer>();
 
     {
@@ -23,8 +23,8 @@ public class Level {
         levelColor.put(2, Color.argb(255, 26, 182, 128));
         levelColor.put(3, Color.argb(255, 0, 0, 0));
     }
-    Level(int snakeLength){
-        this.snakeLength = snakeLength;
+    Level(){
+        this.snakeLength = 0;
         levelCounter = 1;
 
     }
@@ -56,7 +56,11 @@ public class Level {
 
     }
     public int updateBGColor(){
-        return levelColor.get(levelCounter);
+        if(levelCounter<4)
+            return levelColor.get(levelCounter);
+        else if(levelCounter<7)
+            return levelColor.get(levelCounter-3);
+        return 1;
     }
     public void isDead(){
         levelCounter = 1;
