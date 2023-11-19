@@ -199,8 +199,14 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             //Game's speed, changes based on the level
             if(mSnake.getSnakeLength()-level.getOldSnakeLength()>=5) {
-                speed = level.updateSpeed(mSnake.getSnakeLength());
+                if(level.getLevel()<3){
+                    speed = level.updateSpeed(mSnake.getSnakeLength());
+                    level.updateLevel();
+
+                }
+
                 level.updateSnakeLength(mSnake.getSnakeLength());
+
             }
 
 

@@ -22,7 +22,6 @@ public class Level {
         levelColor.put(1, Color.argb(255, 26, 128, 182));
         levelColor.put(2, Color.argb(255, 26, 182, 128));
         levelColor.put(3, Color.argb(255, 0, 0, 0));
-        levelColor.put(4, Color.argb(255, 26, 182, 128));
     }
     Level(int snakeLength){
         this.snakeLength = snakeLength;
@@ -43,10 +42,14 @@ public class Level {
         return levelCounter;
     }
 
+    public void updateLevel(){
+        levelCounter++;
+    }
+
     public int updateSpeed(int snakeLength){
-       if(levelCounter+1<4) {
+       if(levelCounter<4) {
             if (snakeLength - this.snakeLength>=5) {;
-                return levelSpeed.get(levelCounter++);
+                return levelSpeed.get(levelCounter);
             }
         }
         return 0;
