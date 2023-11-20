@@ -59,12 +59,16 @@ class SnakeGame extends SurfaceView implements Runnable{
     private int speed;
     private int mSnakeDirection;
 
+    private GameRenderer gameRenderer;
+
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size) {
         super(context);
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
+
+        gameRenderer = new GameRenderer(mSurfaceHolder, mPaint, mSnake, mApple);
 
         speed = 0;
 
@@ -238,7 +242,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Do all the drawing
     public void draw() {
-        // Get a lock on the mCanvas
+        gameRenderer.draw(mScore,mPaused);
+        /*// Get a lock on the mCanvas
         if (mSurfaceHolder.getSurface().isValid()) {
             mCanvas = mSurfaceHolder.lockCanvas();
 
@@ -275,7 +280,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
-        }
+        }*/
+
     }
 
 
