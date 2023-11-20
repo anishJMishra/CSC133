@@ -32,8 +32,12 @@ class SnakeGame extends SurfaceView implements Runnable{
     private int mEat_ID = -1;
     private int mCrashID = -1;
 
+
+
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
+
+    private int color;
     private int mNumBlocksHigh;
 
     // How many points does the player have
@@ -44,22 +48,31 @@ class SnakeGame extends SurfaceView implements Runnable{
     private SurfaceHolder mSurfaceHolder;
     private Paint mPaint;
 
+    private Level level;
+
     // A snake ssss
     private Snake mSnake;
     // And an apple
     private Apple mApple;
+    private Control control;
+
+    private int speed;
     private int mSnakeDirection;
 
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size) {
         super(context);
-
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
+
+        speed = 0;
+
         // How many blocks of the same size will fit into the height
         mNumBlocksHigh = size.y / blockSize;
+        control = new Control();
 
+        color = Color.argb(255, 26, 128, 182);
         // Initialize the SoundPool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -103,9 +116,10 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-        mSnakeDirection = Snake.RIGHT;
+        level = new Level();
         setFocusable(true);
         setFocusableInTouchMode(true);
+
     }
 
 
@@ -129,14 +143,15 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Handles the game loop
     @Override
     public void run() {
+
         while (mPlaying) {
+
             if(!mPaused) {
                 // Update 10 times a second
                 if (updateRequired()) {
                     update();
                 }
             }
-
             draw();
         }
     }
@@ -146,7 +161,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     public boolean updateRequired() {
 
         // Run at 10 frames per second
-        final long TARGET_FPS = 10;
+        long TARGET_FPS = 10+speed;
         // There are 1000 milliseconds in a second
         final long MILLIS_PER_SECOND = 1000;
 
@@ -166,7 +181,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         return false;
     }
 
-
     // Update all the game objects
     public void update() {
 
@@ -182,6 +196,30 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Add to  mScore
             mScore = mScore + 1;
 
+
+            //Game's speed, changes based on the level
+            if(mSnake.getSnakeLength()-level.getOldSnakeLength()>=5) {
+
+                if(level.getLevel()<3) {
+                    speed = level.updateSpeed(mSnake.getSnakeLength());
+                    level.updateLevel();
+                    level.updateSnakeLength(mSnake.getSnakeLength());
+                }
+                else if(level.getLevel()<6){
+                    level.updateLevel();
+                }
+
+
+
+
+
+
+
+            }
+
+
+
+
             // Play a sound
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
@@ -190,7 +228,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (mSnake.detectDeath()) {
             // Pause the game ready to start again
             mSP.play(mCrashID, 1, 1, 0, 0, 1);
-
+            speed = 0;
+            level.isDead();
             mPaused =true;
         }
 
@@ -204,14 +243,15 @@ class SnakeGame extends SurfaceView implements Runnable{
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+            mCanvas.drawColor(level.updateBGColor());
 
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
             mPaint.setTextSize(120);
 
             // Draw the score
-            mCanvas.drawText("" + mScore, 20, 120, mPaint);
+            mCanvas.drawText("" + mScore+ " " +mSnake.getSnakeLength() + " " + speed , 20, 120, mPaint);
+
 
             // Draw the apple and the snake
             mApple.draw(mCanvas, mPaint);
@@ -238,57 +278,40 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
     }
 
-    // @Override
-//    public boolean onTouchEvent(MotionEvent motionEvent) {
-//        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-//            case MotionEvent.ACTION_UP:
-//                if (mPaused) {
-//                    mPaused = false;
-//                    newGame();
-//
-//                    // Don't want to process snake direction for this tap
-//                    return true;
-//                }
-//
-//                // Let the Snake class handle the input
-//                mSnake.switchHeading(motionEvent);
-//                break;
-//
-//            default:
-//                break;
-//
-//        }
-//        return true;
-//    }
+
+    @Override
+     public boolean onTouchEvent(MotionEvent motionEvent) {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_UP:
+                if (mPaused) {
+                    mPaused = false;
+                    newGame();
+
+                    // Don't want to process snake direction for this tap
+                    return true;
+                }
+
+                // Let the Snake class handle the input
+                mSnake.setSnakeDirection(control.touchUpdater(mSnake.getHeading(), motionEvent, mSnake.getHalfWayPoint()));
+                break;
+
+            default:
+                break;
+
+        }
+        return true;
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mPaused) {
+        if(mPaused){
             mPaused = false;
             newGame();
-
-            // Don't want to process snake direction for this tap
             return true;
         }
-        if (!mPaused) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_W:
-                    if(mSnake.getHeading()!=Snake.Heading.DOWN)
-                        mSnake.setSnakeDirection(Snake.Heading.UP);
-                    break;
-                case KeyEvent.KEYCODE_D:
-                    if(mSnake.getHeading()!=Snake.Heading.LEFT)
-                        mSnake.setSnakeDirection(Snake.Heading.RIGHT);
-                    break;
-                case KeyEvent.KEYCODE_S:
-                    if(mSnake.getHeading()!=Snake.Heading.UP)
-                        mSnake.setSnakeDirection(Snake.Heading.DOWN);
-                    break;
-                case KeyEvent.KEYCODE_A:
-                    if(mSnake.getHeading()!=Snake.Heading.RIGHT)
-                        mSnake.setSnakeDirection(Snake.Heading.LEFT);
-                    break;
-            }
+        if(!mPaused) {
+
+            mSnake.setSnakeDirection(control.keyUpdater(mSnake, mSnake.getHeading(), keyCode));
         }
 
         return true;
