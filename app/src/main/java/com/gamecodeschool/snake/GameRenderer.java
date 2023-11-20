@@ -4,12 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-public class GameRenderer {
+public class GameRenderer extends SurfaceView {
     private Canvas canvas;
     private Paint paint;
-    private SurfaceHolder surfaceHolder;
+
     private Snake snake;
     private Apple apple;
     private int score;
@@ -17,23 +17,23 @@ public class GameRenderer {
     private boolean isPaused;
     private Context context;
 
-    public GameRenderer(SurfaceHolder surfaceHolder, Paint paint, Snake snake, Apple apple) {
-        this.surfaceHolder = surfaceHolder;
-        this.paint = paint;
-        this.snake = snake;
-        this.apple = apple;
+    public GameRenderer(Context context)   {
+
+        super(context);
     }
 
-    public void draw(int score, boolean isPaused) {
+    public Canvas draw(int score, boolean isPaused, Canvas canvas, Paint paint, Snake snake, Apple apple, int backgroundColor) {
+        this.canvas = canvas;
         this.score = score;
         this.isPaused = isPaused;
+        this.paint = paint;
 
         // Check and lock canvas
-        if (surfaceHolder.getSurface().isValid()) {
-            canvas = surfaceHolder.lockCanvas();
+
+
 
             // Fill the screen with a background color
-            canvas.drawColor(Color.BLACK); // Example color, adjust as needed
+            canvas.drawColor(backgroundColor); // Example color, adjust as needed
 
             // Draw the score
             paint.setColor(Color.WHITE); // Example color, adjust as needed
@@ -47,11 +47,10 @@ public class GameRenderer {
             // Draw some text while paused
             if (isPaused) {
                 paint.setTextSize(250);
-                canvas.drawText(context.getResources().getString(R.string.tap_to_play), 200, 700, paint);
+                canvas.drawText(getResources().getString(R.string.tap_to_play), 200, 700, paint);
             }
 
-            // Unlock the canvas and post the draw
-            surfaceHolder.unlockCanvasAndPost(canvas);
-        }
+
+        return canvas;
     }
 }
