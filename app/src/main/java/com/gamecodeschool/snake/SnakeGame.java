@@ -68,7 +68,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
 
-        gameRenderer = new GameRenderer(mSurfaceHolder, mPaint, mSnake, mApple);
+        gameRenderer = new GameRenderer(context);
 
         speed = 0;
 
@@ -242,7 +242,11 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Do all the drawing
     public void draw() {
-        gameRenderer.draw(mScore,mPaused);
+        if (mSurfaceHolder.getSurface().isValid()) {
+            mCanvas = mSurfaceHolder.lockCanvas();
+            mCanvas = gameRenderer.draw(mScore, mPaused, mCanvas, mPaint, mSnake, mApple, level.updateBGColor());
+            mSurfaceHolder.unlockCanvasAndPost(mCanvas);
+        }
 
     }
 
