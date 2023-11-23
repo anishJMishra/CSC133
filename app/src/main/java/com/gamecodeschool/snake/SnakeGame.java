@@ -68,7 +68,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
 
-        gameRenderer = new GameRenderer(mSurfaceHolder, mPaint, mSnake, mApple);
+
 
         speed = 0;
 
@@ -110,6 +110,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
 
+
         // Call the constructors of our two game objects
         mApple = new Apple(context,
                 new Point(NUM_BLOCKS_WIDE,
@@ -123,6 +124,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         level = new Level();
         setFocusable(true);
         setFocusableInTouchMode(true);
+
+        gameRenderer = new GameRenderer(context, mSurfaceHolder, mPaint, mSnake, mApple);
 
     }
 

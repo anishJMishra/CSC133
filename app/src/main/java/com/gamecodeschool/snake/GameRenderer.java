@@ -17,7 +17,8 @@ public class GameRenderer {
     private boolean isPaused;
     private Context context;
 
-    public GameRenderer(SurfaceHolder surfaceHolder, Paint paint, Snake snake, Apple apple) {
+    public GameRenderer(Context context,SurfaceHolder surfaceHolder, Paint paint, Snake snake, Apple apple) {
+        this.context = context;
         this.surfaceHolder = surfaceHolder;
         this.paint = paint;
         this.snake = snake;
