@@ -44,10 +44,6 @@ class Snake {
 
     // A bitmap for the body
     private Bitmap mBitmapBody;
-    public static final int UP = 1;
-    public static final int RIGHT = 2;
-    public static final int DOWN = 3;
-    public static final int LEFT = 4;
 
     Snake(Context context, Point mr, int ss) {
 
@@ -172,6 +168,14 @@ class Snake {
 
     }
 
+
+    public Point getHeading(int levelCounter){
+        if(heading == Heading.UP) return new Point(segmentLocations.get(0).x, segmentLocations.get(0).y+1);
+        else if(heading == Heading.DOWN) return new Point(segmentLocations.get(0).x, segmentLocations.get(0).y-1);
+        else if(heading == Heading.RIGHT) return new Point(segmentLocations.get(0).x+1, segmentLocations.get(0).y);
+        else if(heading == Heading.LEFT) return new Point(segmentLocations.get(0).x-1, segmentLocations.get(0).y);
+        return null;
+    }
 
     boolean detectDeath() {
         // Has the snake died?

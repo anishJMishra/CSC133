@@ -138,6 +138,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         level.randomObstacles();
         level.locationChecker(mSnake.getSegmentLocations(), mApple.getLocation());
+        level.checkDirHit(mSnake.getHeading(level.getLevel()));
 
 
         // Reset the mScore
@@ -223,6 +224,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 }
                 level.randomObstacles();
                 level.locationChecker(mSnake.getSegmentLocations(), mApple.getLocation());
+                level.checkDirHit(mSnake.getHeading(level.getLevel()));
             }
  // Play a sound
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);

@@ -107,6 +107,13 @@ public class Level {
 
         }
 
+
+    }
+    public void checkDirHit(Point objectCoords){
+        for(int key : obstacleCoords.keySet()){
+            if(key == objectCoords.x && obstacleCoords.get(key) == objectCoords.y)
+                obstacleCoords.remove(key);
+        }
     }
     public void randomObstacles() {
             obstacleCoords = new HashMap<Integer, Integer>();  //Used HashMap since its time complexity is faster than ArrayList's
