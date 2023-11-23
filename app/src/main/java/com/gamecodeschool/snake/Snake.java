@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class Snake {
 
@@ -130,7 +131,9 @@ class Snake {
         // Start with a single snake segment
         segmentLocations.add(new Point(w / 2, h / 2));
     }
-
+    ArrayList<Point> getSegmentLocations(){
+        return segmentLocations;
+    }
 
     void move() {
         // Move the body
@@ -207,6 +210,14 @@ class Snake {
             // the segment in front of it
             segmentLocations.add(new Point(-10, -10));
             return true;
+        }
+        return false;
+    }
+
+    boolean checkHit(HashMap<Integer, Integer> obstacleCoords){
+        for(int key : obstacleCoords.keySet()){
+            if(key == segmentLocations.get(0).x && obstacleCoords.get(key) == segmentLocations.get(0).y)
+                return true;
         }
         return false;
     }

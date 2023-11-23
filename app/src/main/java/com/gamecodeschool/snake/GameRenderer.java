@@ -22,7 +22,7 @@ public class GameRenderer extends SurfaceView {
         super(context);
     }
 
-    public Canvas draw(int score, boolean isPaused, Canvas canvas, Paint paint, Snake snake, Apple apple, int backgroundColor) {
+    public Canvas draw(int score, boolean isPaused, Canvas canvas, Paint paint, Snake snake, Apple apple, Level level, int backgroundColor) {
         this.canvas = canvas;
         this.score = score;
         this.isPaused = isPaused;
@@ -43,6 +43,7 @@ public class GameRenderer extends SurfaceView {
             // Draw the apple and the snake
             apple.draw(canvas, paint);
             snake.draw(canvas, paint);
+            level.draw(canvas, paint);
 
             // Draw some text while paused
             if (isPaused) {

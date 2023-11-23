@@ -120,7 +120,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-        level = new Level();
+        level = new Level(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
         setFocusable(true);
         setFocusableInTouchMode(true);
 
@@ -135,6 +135,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Get the apple ready for dinner
         mApple.spawn();
+
+        level.randomObstacles();
+        level.locationChecker(mSnake.getSegmentLocations(), mApple.getLocation());
+
 
         // Reset the mScore
         mScore = 0;
@@ -188,8 +192,13 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Update all the game objects
     public void update() {
 
+
+
+
         // Move the snake
         mSnake.move();
+
+
 
         // Did the head of the snake eat the apple?
         if(mSnake.checkDinner(mApple.getLocation())){
@@ -212,24 +221,15 @@ class SnakeGame extends SurfaceView implements Runnable{
                 else if(level.getLevel()<6){
                     level.updateLevel();
                 }
-
-
-
-
-
-
-
+                level.randomObstacles();
+                level.locationChecker(mSnake.getSegmentLocations(), mApple.getLocation());
             }
-
-
-
-
-            // Play a sound
+ // Play a sound
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
         // Did the snake die?
-        if (mSnake.detectDeath()) {
+        if (mSnake.detectDeath() || mSnake.checkHit(level.getObstacleCoords())) {
             // Pause the game ready to start again
             mSP.play(mCrashID, 1, 1, 0, 0, 1);
             speed = 0;
@@ -244,7 +244,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     public void draw() {
         if (mSurfaceHolder.getSurface().isValid()) {
             mCanvas = mSurfaceHolder.lockCanvas();
-            mCanvas = gameRenderer.draw(mScore, mPaused, mCanvas, mPaint, mSnake, mApple, level.updateBGColor());
+            mCanvas = gameRenderer.draw(mScore, mPaused, mCanvas, mPaint, mSnake, mApple, level,level.updateBGColor());
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
 
