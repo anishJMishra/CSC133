@@ -125,9 +125,7 @@ public class Level {
     public HashMap<Integer, Integer> getObstacleCoords(){
         return obstacleCoords;
     }
-    public void setupUpObjects(){
 
-    }
     public void draw(Canvas canvas, Paint paint){
         if(obstacleCoords != null && !obstacleCoords.isEmpty()){
             for(int key : obstacleCoords.keySet()){
