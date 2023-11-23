@@ -109,7 +109,7 @@ public class Level {
 
 
     }
-    public void checkDirHit(Point objectCoords){
+    public void checkDirHit(Point objectCoords){  //Checks if an object spawned right in fron of the Snake
         for(int key : obstacleCoords.keySet()){
             if(key == objectCoords.x && obstacleCoords.get(key) == objectCoords.y)
                 obstacleCoords.remove(key);
