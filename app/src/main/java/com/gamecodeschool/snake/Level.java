@@ -31,7 +31,11 @@ public class Level {
         for(int i = 1; i < 4; i++)
             levelSpeed.put(i, i*5);
     }
+    private int currentLevel;
 
+    public Level() {
+        this.currentLevel = 1; // Set the initial level to 1
+    }
     HashMap<Integer, Integer> levelColor = new HashMap<Integer, Integer>();
     {
         levelColor.put(1, Color.argb(255, 26, 128, 182));
@@ -92,6 +96,7 @@ public class Level {
         obstacleCoords.clear();
     }
 
+
     public void locationChecker(ArrayList<Point> segmentLocation, Point appleLocation){
         for(int i = 0; i < segmentLocation.size(); i++){
 
@@ -139,6 +144,9 @@ public class Level {
                 canvas.drawBitmap(mBitmapObject, key * blockSize, obstacleCoords.get(key)* blockSize, paint);
             }
         }
+    }
+    public int getCurrentLevel() {
+        return currentLevel;
     }
 }
 
