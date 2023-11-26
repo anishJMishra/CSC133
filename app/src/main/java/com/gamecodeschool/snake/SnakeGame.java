@@ -28,7 +28,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPaused = true;
 
     // for playing sound effects
-    private SoundPool mSP;
+    //private SoundPool mSP;
     private int mEat_ID = -1;
     private int mCrashID = -1;
 
@@ -61,6 +61,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     private GameRenderer gameRenderer;
 
+    private SoundManager soundManager;
+
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size) {
@@ -78,7 +80,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         color = Color.argb(255, 26, 128, 182);
         // Initialize the SoundPool
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+        soundManager = new SoundManager(context);
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -104,7 +109,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         } catch (IOException e) {
             // Error
-        }
+        }*/
 
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
@@ -228,13 +233,15 @@ class SnakeGame extends SurfaceView implements Runnable{
 
 
             // Play a sound
-            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            //mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            soundManager.playEatSound();
         }
 
         // Did the snake die?
         if (mSnake.detectDeath()) {
             // Pause the game ready to start again
-            mSP.play(mCrashID, 1, 1, 0, 0, 1);
+            //mSP.play(mCrashID, 1, 1, 0, 0, 1);
+            soundManager.playCrashSound();
             speed = 0;
             level.isDead();
             mPaused =true;
