@@ -78,7 +78,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         int blockSize = size.x / NUM_BLOCKS_WIDE;
 
 
-        gameRenderer = new GameRenderer(context);
+        gameRenderer = new GameRenderer(context, mSurfaceHolder,mPaint,mSnake,mApple);
 
 
         speed = 0;

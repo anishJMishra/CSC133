@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameRenderer extends SurfaceView {
@@ -15,11 +16,13 @@ public class GameRenderer extends SurfaceView {
     private Apple apple;
     private Level level;
     private int score;
+    private SurfaceHolder surfaceHolder;
     private boolean isPaused;
     private boolean isGameOver;
     private Context context;
 
-    public GameRenderer(Context context,SurfaceHolder surfaceHolder, Paint paint, Snake snake, Apple apple) {
+    public GameRenderer(Context context, SurfaceHolder surfaceHolder, Paint paint, Snake snake, Apple apple) {
+        super(context);
         this.context = context;
         this.surfaceHolder = surfaceHolder;
         this.paint = paint;
