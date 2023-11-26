@@ -19,11 +19,12 @@ public class GameRenderer extends SurfaceView {
     private boolean isGameOver;
     private Context context;
 
-    public GameRenderer(Context context) {
-        super(context);
+    public GameRenderer(Context context,SurfaceHolder surfaceHolder, Paint paint, Snake snake, Apple apple) {
         this.context = context;
-        paint = new Paint();
-        isGameOver = false; // Initialize the flag
+        this.surfaceHolder = surfaceHolder;
+        this.paint = paint;
+        this.snake = snake;
+        this.apple = apple;
     }
 
     public Canvas draw(boolean isGameOver, int score, boolean isPaused, Canvas canvas, Paint paint, Snake snake, Apple apple, Level level, int backgroundColor, Resources resources) {

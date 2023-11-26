@@ -28,7 +28,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPaused = true;
 
     // for playing sound effects
-    private SoundPool mSP;
+    //private SoundPool mSP;
     private int mEat_ID = -1;
     private int mCrashID = -1;
 
@@ -61,6 +61,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     private GameRenderer gameRenderer;
 
+    private SoundManager soundManager;
+
     // This is the constructor method that gets called
     // from SnakeActivity
     private Context mContext; // Add this variable to store the context
@@ -75,7 +77,9 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
 
+
         gameRenderer = new GameRenderer(context);
+
 
         speed = 0;
 
@@ -85,7 +89,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         color = Color.argb(255, 26, 128, 182);
         // Initialize the SoundPool
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+        soundManager = new SoundManager(context);
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -111,11 +118,12 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         } catch (IOException e) {
             // Error
-        }
+        }*/
 
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
+
 
         // Call the constructors of our two game objects
         mApple = new Apple(context,
@@ -130,6 +138,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         level = new Level(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
         setFocusable(true);
         setFocusableInTouchMode(true);
+
+        gameRenderer = new GameRenderer(context, mSurfaceHolder, mPaint, mSnake, mApple);
 
     }
 
@@ -229,14 +239,21 @@ class SnakeGame extends SurfaceView implements Runnable{
                 level.locationChecker(mSnake.getSegmentLocations(), mApple.getLocation());
                 level.checkDirHit(mSnake.getHeading(level.getLevel()));
             }
- // Play a sound
-            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+
+
+
+
+
+            // Play a sound
+            //mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            soundManager.playEatSound();
         }
 
         // Did the snake die?
         if (mSnake.detectDeath() || mSnake.checkHit(level.getObstacleCoords())) {
             // Pause the game ready to start again
-            mSP.play(mCrashID, 1, 1, 0, 0, 1);
+            //mSP.play(mCrashID, 1, 1, 0, 0, 1);
+            soundManager.playCrashSound();
             speed = 0;
             isGameOver = level.isDead();
             mPaused =true;
