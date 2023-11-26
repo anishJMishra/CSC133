@@ -1,6 +1,7 @@
 package com.gamecodeschool.snake;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,29 +13,32 @@ public class GameRenderer extends SurfaceView {
 
     private Snake snake;
     private Apple apple;
+    private Level level;
     private int score;
-
     private boolean isPaused;
+    private boolean isGameOver;
     private Context context;
 
-    public GameRenderer(Context context)   {
-
+    public GameRenderer(Context context) {
         super(context);
+        this.context = context;
+        paint = new Paint();
+        isGameOver = false; // Initialize the flag
     }
 
-    public Canvas draw(int score, boolean isPaused, Canvas canvas, Paint paint, Snake snake, Apple apple, Level level, int backgroundColor) {
+    public Canvas draw(boolean isGameOver, int score, boolean isPaused, Canvas canvas, Paint paint, Snake snake, Apple apple, Level level, int backgroundColor, Resources resources) {
         this.canvas = canvas;
         this.score = score;
         this.isPaused = isPaused;
         this.paint = paint;
-
+        this.isGameOver = isGameOver;
         // Check and lock canvas
+        // Fill the screen with a background color
+        canvas.drawColor(backgroundColor); // Example color, adjust as needed
 
-
-
-            // Fill the screen with a background color
-            canvas.drawColor(backgroundColor); // Example color, adjust as needed
-
+        if (this.isGameOver) {
+            drawGameOverScreen();
+        } else {
             // Draw the score
             paint.setColor(Color.WHITE); // Example color, adjust as needed
             paint.setTextSize(120);
@@ -48,10 +52,24 @@ public class GameRenderer extends SurfaceView {
             // Draw some text while paused
             if (isPaused) {
                 paint.setTextSize(250);
-                canvas.drawText(getResources().getString(R.string.tap_to_play), 200, 700, paint);
+                canvas.drawText(resources.getString(R.string.tap_to_play), 200, 700, paint);
             }
-
+        }
 
         return canvas;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
+    }
+
+    private void drawGameOverScreen() {
+        paint.setColor(Color.RED); // Example color
+        paint.setTextSize(250);
+        canvas.drawText("Game Over", 200, 400, paint);
+        canvas.drawText("Score: " + score, 200, 700, paint);
+        paint.setColor(Color.WHITE); // Example color
+        paint.setTextSize(120);
+        canvas.drawText(context.getResources().getString(R.string.tap_to_play), 200, 900, paint);
     }
 }

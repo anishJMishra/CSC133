@@ -30,6 +30,8 @@ public class Control{
                     return Snake.Heading.LEFT;
                 else
                     return heading;
+            case KeyEvent.KEYCODE_ENTER:
+
         }
         return heading;
     }

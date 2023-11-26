@@ -63,8 +63,15 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // This is the constructor method that gets called
     // from SnakeActivity
+    private Context mContext; // Add this variable to store the context
+    private boolean isGameOver;
+
+    // This is the constructor method that gets called
+    // from SnakeActivity
+
     public SnakeGame(Context context, Point size) {
         super(context);
+        mContext=context;
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
 
@@ -194,12 +201,8 @@ class SnakeGame extends SurfaceView implements Runnable{
     public void update() {
 
 
-
-
         // Move the snake
         mSnake.move();
-
-
 
         // Did the head of the snake eat the apple?
         if(mSnake.checkDinner(mApple.getLocation())){
@@ -235,7 +238,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Pause the game ready to start again
             mSP.play(mCrashID, 1, 1, 0, 0, 1);
             speed = 0;
-            level.isDead();
+            isGameOver = level.isDead();
             mPaused =true;
         }
 
@@ -246,10 +249,9 @@ class SnakeGame extends SurfaceView implements Runnable{
     public void draw() {
         if (mSurfaceHolder.getSurface().isValid()) {
             mCanvas = mSurfaceHolder.lockCanvas();
-            mCanvas = gameRenderer.draw(mScore, mPaused, mCanvas, mPaint, mSnake, mApple, level,level.updateBGColor());
+            mCanvas = gameRenderer.draw(isGameOver, mScore, mPaused, mCanvas, mPaint, mSnake, mApple, level, level.updateBGColor(), mContext.getResources()); // Pass the context
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
-
     }
 
 
@@ -280,6 +282,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(mPaused){
             mPaused = false;
+            isGameOver = false;
             newGame();
             return true;
         }
